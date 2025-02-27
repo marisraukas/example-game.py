@@ -1,7 +1,14 @@
 import sys
 import pygame
+from bubble import Bubble
 
-def check_events(player):
+pygame.init()
+ADDBUBBLE = pygame.USEREVENT + 1
+pygame.time.set_timer(ADDBUBBLE, 250)
+
+
+
+def check_events(game_settings, screen, player, bubbles):
     """Check keyboard events"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -11,7 +18,7 @@ def check_events(player):
                 player.moving_right = True
             if event.key == pygame.K_LEFT:
                 player.moving_left = True
-            if event.key == pyagme.K_UP:
+            if event.key == pygame.K_UP:
                 player.moving_up = True
             if event.key == pygame.K_DOWN:
                 player.moving_down = True
@@ -24,9 +31,18 @@ def check_events(player):
                 player.moving_up = False
             if event.key == pygame.K_DOWN:
                 player.moving_down = False
+        elif event.type == ADDBUBBLE:
+            create_bubble(game_settings, screen, bubbles)
+
+
+def create_bubble(game_settings, screen, bubbles):
+    new_bubble = Bubble(screen, game_settings)
+    bubbles.add(new_bubble)
+
             
-def update_screen(game_settings, screen, player):
-    """Update image on screen and draw new screen"""
+def update_screen(game_settings, screen, player, bubble):
     screen.fill(game_settings.bg_color)
     player.blit_me()
+    for bubble in bubbles:
+        bubble.blit_me()
     pygame.display.flip()
